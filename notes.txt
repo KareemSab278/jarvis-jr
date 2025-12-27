@@ -1,0 +1,3 @@
+i plan to have this run inside vscode locally instead of paying money for copilot. its useless anyway locally
+
+also i need a smaller model to run and maybe i can make it more efficient. anyway i need to go destroy my legs in the gym
