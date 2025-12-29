@@ -3,15 +3,30 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import { useState } from "react";
 import { ButtonComponent } from "./ButtonComponent";
-import { inputFieldStyle, submitButtonStyle, inputFieldContainerStyle } from "../Theme";
+import {
+  inputFieldStyle,
+  submitButtonStyle,
+  inputFieldContainerStyle,
+} from "../Theme";
+import { useDispatch } from "react-redux";
+import { pushMessage } from "../storage/chatSlice";
 export { InputField };
-
-const handleSubmit = (input) => {
-  console.log(`Submitted: ${input}`);
-};
 
 const InputField = () => {
   const [inputValue, setInputValue] = useState("");
+  const dispatch = useDispatch();
+
+  const handleSubmit = (input) => {
+    console.log(`Submitted: ${input}`);
+    dispatch(
+      pushMessage({
+        isJarvisJr: false,
+        text: input,
+        ts: Date.now(),
+      })
+    );
+  };
+
   return (
     <Box sx={inputFieldContainerStyle}>
       <TextField

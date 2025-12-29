@@ -9,11 +9,15 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
 import { drawerTheme } from "../Theme";
+import { loadChatFromLS, getAllChatsFromLS } from "../storage/LS";
+import { useDispatch } from "react-redux";
+import { loadChat } from "../storage/chatSlice";
 export { DrawerComponent };
 
 const DrawerComponent = ({ options = [] }) => {
-  // maybe i should keep options in redux or ls instead of prop...
   const [open, setOpen] = useState(false);
+  const [allChats] = useState(getAllChatsFromLS());
+  const dispatch = useDispatch();
   const drawerStyle = {
     width: 200,
     backgroundColor: drawerTheme.paper.sx.backgroundColor,
@@ -33,8 +37,20 @@ const DrawerComponent = ({ options = [] }) => {
     options.unshift({
       text: "New Chat",
       action: () => {
-        alert("New Chat clicked");
+        dispatch(loadChat([]));
       },
+    });
+  }, []);
+
+  useEffect(() => {
+    allChats.forEach((chatName) => {
+      options.push({
+        text: `${chatName}`,
+        action: () => {
+          const chat = loadChatFromLS(chatName);
+          dispatch(loadChat(chat));
+        },
+      });
     });
   }, []);
 

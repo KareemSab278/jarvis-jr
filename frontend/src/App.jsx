@@ -1,14 +1,17 @@
 export { App };
 
 import { InputField } from "./components/InputFieldComponent";
-import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import { ChatBubbleComponent } from "./components/ChatBubbleComponent";
-import { memory } from "./logic/JarvisJrMemory";
+import { useEffect } from "react";
 
 const bodyStyle = { width: "90%", margin: "0 auto" };
 
-function App() {
-  const [chatEntries, setChatEntries] = useState(memory.recall());
+const App = () => {
+  const chatEntries = useSelector((state) => state.chat);
+  useEffect(() => {
+    console.log("Chat Entries Updated:", chatEntries);
+  }, [chatEntries]);
 
   return (
     <section style={bodyStyle}>
@@ -17,14 +20,14 @@ function App() {
           <ChatBubbleComponent
             key={index}
             message={msg?.text}
+            timestamp={msg?.ts}
             isJarvisJr={msg?.isJarvisJr || false}
           />
         ))}
       <InputField />
       {chatEntries.length === 0 && (
         <>
-          <h1>Hi, I'm Jarvis Jr</h1>
-          <p>(not Jarvis from Iron Man)</p>
+          <h1>New Chat</h1>
         </>
       )}
     </section>
