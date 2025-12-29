@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import Button from "@mui/material/Button";
@@ -8,51 +8,76 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
-import { drawerTheme } from "../Theme";
-import { loadChatFromLS, getAllChatsFromLS } from "../storage/LS";
-import { useDispatch } from "react-redux";
+import { drawerTheme, burgerSize, drawerStyle } from "../Theme";
+import { loadChatFromLS, getAllChatsFromLS, saveChatToLS } from "../storage/LS";
+import { setCurrentChatName } from "../storage/currentChatSlice";
+import { useDispatch, useSelector } from "react-redux";
 import { loadChat } from "../storage/chatSlice";
 export { DrawerComponent };
 
-const DrawerComponent = ({ options = [] }) => {
+const DrawerComponent = () => {
   const [open, setOpen] = useState(false);
-  const [allChats] = useState(getAllChatsFromLS());
+  const [allChats, setAllChats] = useState(getAllChatsFromLS());
   const dispatch = useDispatch();
-  const drawerStyle = {
-    width: 200,
-    backgroundColor: drawerTheme.paper.sx.backgroundColor,
-    color: drawerTheme.paper.sx.color,
+  const chat = useSelector((state) => state.chat);
+  const currentChatName = useSelector((state) => state.currentChatName);
+
+  const refreshChats = useCallback(() => {
+    setAllChats(getAllChatsFromLS());
+  }, []);
+
+  const confirmSaveChatToLS = () => {
+    if (!currentChatName) {
+      alert("No chat selected to save.");
+      return;
+    }
+    if (!chat.length) {
+      alert("Failed to save chat. Make sure your chat is not empty.");
+      return;
+    }
+    const success = saveChatToLS(currentChatName, chat);
+    if (success) {
+      alert(`Chat "${currentChatName}" saved.`);
+      refreshChats();
+    } else {
+      alert("Failed to save chat.");
+    }
   };
-  const burgerSize = {
-    md: { fontSize: 32, color: drawerTheme.paper.sx.color },
-    lg: { fontSize: 40, color: drawerTheme.paper.sx.color },
-    xl: { fontSize: 48, color: drawerTheme.paper.sx.color },
+
+  const handleNewChat = () => {
+    const chatName = prompt("Enter a name for your new chat:");
+    if (chatName) {
+      dispatch(loadChat([]));
+      dispatch(setCurrentChatName(chatName));
+      refreshChats();
+    }
+  };
+
+  const handleSelectChat = (chatName) => {
+    const chat = loadChatFromLS(chatName);
+    dispatch(loadChat(chat));
+    dispatch(setCurrentChatName(chatName));
   };
 
   const toggleDrawer = (newOpen) => () => {
+    if (newOpen) refreshChats();
     setOpen(newOpen);
   };
 
-  useEffect(() => {
-    options.unshift({
+  const options = [
+    {
       text: "New Chat",
-      action: () => {
-        dispatch(loadChat([]));
-      },
-    });
-  }, []);
-
-  useEffect(() => {
-    allChats.forEach((chatName) => {
-      options.push({
-        text: `${chatName}`,
-        action: () => {
-          const chat = loadChatFromLS(chatName);
-          dispatch(loadChat(chat));
-        },
-      });
-    });
-  }, []);
+      action: handleNewChat,
+    },
+    {
+      text: "Save Current Chat",
+      action: confirmSaveChatToLS,
+    },
+    ...allChats.map((chatName) => ({
+      text: chatName,
+      action: () => handleSelectChat(chatName),
+    })),
+  ];
 
   const DrawerList = (
     <Box sx={drawerStyle} onClick={toggleDrawer(false)}>

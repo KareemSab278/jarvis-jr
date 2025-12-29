@@ -6,6 +6,8 @@ export {
   submitButtonStyle,
   inputFieldContainerStyle,
   boxStyle,
+  burgerSize,
+  drawerStyle,
 };
 const COLOR = "#dfdfdfff";
 const BACKGROUND = "#2b2d42ff";
@@ -58,6 +60,17 @@ const inputFieldStyle = {
   p: 1,
   border: "1px solid #dfdfdf25",
 };
+
+const drawerStyle = {
+    width: 200,
+    backgroundColor: drawerTheme.paper.sx.backgroundColor,
+    color: drawerTheme.paper.sx.color,
+  };
+  const burgerSize = {
+    md: { fontSize: 32, color: drawerTheme.paper.sx.color },
+    lg: { fontSize: 40, color: drawerTheme.paper.sx.color },
+    xl: { fontSize: 48, color: drawerTheme.paper.sx.color },
+  };
 
 const inputFieldContainerStyle = {
   width: "100%",

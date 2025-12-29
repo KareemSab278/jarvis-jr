@@ -10,6 +10,7 @@ import {
 } from "../Theme";
 import { useDispatch } from "react-redux";
 import { pushMessage } from "../storage/chatSlice";
+import {saveChatToLS} from "../storage/LS";
 export { InputField };
 
 const InputField = () => {
