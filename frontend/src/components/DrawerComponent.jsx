@@ -21,43 +21,29 @@ const DrawerComponent = () => {
   const [allChats, setAllChats] = useState(getAllChatsFromLS());
   const dispatch = useDispatch();
   const chat = useSelector((state) => state.chat);
-  const currentChatName = useSelector((state) => state.currentChatName);
+  const currentChatName = useState(useSelector((state) => state.currentChatName));
 
   const refreshChats = useCallback(() => {
+    setOpen(false);
     setAllChats(getAllChatsFromLS());
-  }, []);
-
-  const confirmSaveChatToLS = () => {
-    if (!currentChatName) {
-      alert("No chat selected to save.");
-      return;
-    }
-    if (!chat.length) {
-      alert("Failed to save chat. Make sure your chat is not empty.");
-      return;
-    }
-    const success = saveChatToLS(currentChatName, chat);
-    if (success) {
-      alert(`Chat "${currentChatName}" saved.`);
-      refreshChats();
-    } else {
-      alert("Failed to save chat.");
-    }
-  };
+  }, [open]);
 
   const handleNewChat = () => {
-    const chatName = prompt("Enter a name for your new chat:");
-    if (chatName) {
-      dispatch(loadChat([]));
-      dispatch(setCurrentChatName(chatName));
-      refreshChats();
-    }
-  };
+  const chatName = prompt("Enter a name for your new chat:");
+  if (chatName) {
+    dispatch(loadChat([]));
+    dispatch(setCurrentChatName(chatName));
+    saveChatToLS(chatName, []);
+    refreshChats();
+  }
+  setOpen(false);
+};
 
   const handleSelectChat = (chatName) => {
     const chat = loadChatFromLS(chatName);
     dispatch(loadChat(chat));
     dispatch(setCurrentChatName(chatName));
+    setOpen(false);
   };
 
   const toggleDrawer = (newOpen) => () => {
@@ -67,12 +53,8 @@ const DrawerComponent = () => {
 
   const options = [
     {
-      text: "New Chat",
-      action: handleNewChat,
-    },
-    {
-      text: "Save Current Chat",
-      action: confirmSaveChatToLS,
+      text: "Start New Chat",
+      action: () => handleNewChat(),
     },
     ...allChats.map((chatName) => ({
       text: chatName,
@@ -80,29 +62,34 @@ const DrawerComponent = () => {
     })),
   ];
 
-const DrawerList = (
-  <Box sx={drawerStyle}>
-    <List>
-      {options.map((i, option) => (
-        <ListItem key={`${i}-${option.text}`} disablePadding>
-          {i.text === "New Chat" || i.text === "Save Current Chat" ? (
-            <ListItemButton onClick={i.action}>
-              <ListItemText primary={i.text} />
-            </ListItemButton>
-          ) : (
-            <>
-              <ListItemButton onClick={() => { i.action(); toggleDrawer(false)(); }}>
-                <ListItemText primary={i.text} />
+  const DrawerList = (
+    <Box sx={drawerStyle}>
+      <List>
+        {options.map((option, idx) => (
+  <ListItem key={`${option.text}-${idx}`} disablePadding>
+            {option.text === "New Chat" || option.text === "Save Current Chat" ? (
+              <ListItemButton onClick={option.action}>
+                <ListItemText primary={option.text} />
               </ListItemButton>
-              <MenuComponent chatName={i.text} onDelete={refreshChats} />
-            </>
-          )}
-        </ListItem>
-      ))}
-    </List>
-    <Divider />
-  </Box>
-);
+            ) : (
+              <>
+                <ListItemButton
+                  onClick={() => {
+                    option.action();
+                    toggleDrawer(false)();
+                  }}
+                >
+                  <ListItemText primary={option.text} />
+                </ListItemButton>
+                <MenuComponent chatName={option.text} onAction={refreshChats} currChat={chat} />
+              </>
+            )}
+          </ListItem>
+        ))}
+      </List>
+      <Divider />
+    </Box>
+  );
   return (
     <div style={drawerStyle}>
       <Button onClick={toggleDrawer(true)} variant="filled">

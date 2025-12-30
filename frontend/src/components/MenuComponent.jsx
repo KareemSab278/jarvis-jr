@@ -3,19 +3,20 @@ import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { removeChatFromLS } from "../storage/LS";
+import { removeChatFromLS, renameChatInLS, saveChatToLS } from "../storage/LS";
 
 export { MenuComponent };
 
-const options = ["Delete", "Rename"];
+const options = ["Delete", "Rename", "Save"];
 const ITEM_HEIGHT = 48;
 
-const MenuComponent = ({ chatName, onRename, onDelete }) => {
+const MenuComponent = ({ chatName, onAction, currChat }) => {
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
+
 
   const handleClose = () => {
     setAnchorEl(null);
@@ -23,11 +24,18 @@ const MenuComponent = ({ chatName, onRename, onDelete }) => {
 
   const handleMenuItemClick = (option) => {
     if (option === "Delete") {
-      removeChatFromLS(chatName);
-      if (onDelete) onDelete(chatName);
-      alert(`Chat "${chatName}" deleted.`);
+      removeChatFromLS(chatName)
+        ? alert(`Chat "${chatName}" deleted.`)
+        : alert("Failed to delete chat.");
     } else if (option === "Rename") {
-      if (onRename) onRename(chatName);
+      renameChatInLS(chatName)
+        ? alert(`Chat "${chatName}" renamed.`)
+        : alert("Failed to rename chat.");
+    }
+    else if (option === "Save") {
+        saveChatToLS(chatName, currChat)
+            ? alert(`Chat "${chatName}" saved.`)
+            : alert("Failed to save chat.");
     }
     handleClose();
   };
@@ -62,10 +70,7 @@ const MenuComponent = ({ chatName, onRename, onDelete }) => {
         }}
       >
         {options.map((option) => (
-          <MenuItem
-            key={option}
-            onClick={() => handleMenuItemClick(option)}
-          >
+          <MenuItem key={option} onClick={() => handleMenuItemClick(option)}>
             {option}
           </MenuItem>
         ))}

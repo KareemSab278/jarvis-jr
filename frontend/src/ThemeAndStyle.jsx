@@ -13,6 +13,7 @@ const COLOR = "#dfdfdfff";
 const BACKGROUND = "#2b2d42ff";
 const CHAT_BUBBLE_BACKGROUND_USER = "#242536ff";
 const CHAT_BUBBLE_BACKGROUND_JARVIS_JR = "#383a53ff";
+const FONT_FAMILY = "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif";
 
 const Theme = `
     html, body, #root {
@@ -20,7 +21,7 @@ const Theme = `
     background: ${BACKGROUND};
     color: ${COLOR};
     margin: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: ${FONT_FAMILY};
     text-align: center;
     }
 
@@ -32,6 +33,7 @@ const drawerTheme = {
       backgroundColor: BACKGROUND,
       width: 200,
       color: COLOR,
+      fontFamily: FONT_FAMILY,
     },
   },
 };
@@ -46,6 +48,7 @@ const chatBubbleTheme = (isJarvisJr) => {
       ? CHAT_BUBBLE_BACKGROUND_USER
       : CHAT_BUBBLE_BACKGROUND_JARVIS_JR,
     borderRadius: 2,
+    fontFamily: FONT_FAMILY,
     borderTopRightRadius: isJarvisJr ? 8 : 0,
     borderTopLeftRadius: isJarvisJr ? 0 : 8,
   };
@@ -65,6 +68,7 @@ const drawerStyle = {
     width: 200,
     backgroundColor: drawerTheme.paper.sx.backgroundColor,
     color: drawerTheme.paper.sx.color,
+    fontFamily: FONT_FAMILY,
   };
   const burgerSize = {
     md: { fontSize: 32, color: drawerTheme.paper.sx.color },
@@ -79,7 +83,7 @@ const inputFieldContainerStyle = {
   gap: 0.5,
   position: "fixed",
   left: "50%",
-
+  fontFamily: FONT_FAMILY,
   bottom: 10,
   transform: "translateX(-50%)",
   zIndex: 1300,
