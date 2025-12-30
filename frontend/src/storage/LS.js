@@ -1,6 +1,6 @@
 const STORAGE_KEY = 'JarvisJrChats'
 
-export { saveChatToLS, loadChatFromLS, getAllChatsFromLS }
+export { saveChatToLS, loadChatFromLS, getAllChatsFromLS, removeChatFromLS }
 
 const saveChatToLS = (chatName, chat) => {
     if (!chat.length) return false
@@ -19,4 +19,10 @@ const loadChatFromLS = (chatName) => {
 const getAllChatsFromLS = () => {
     const chats = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}')
     return Object.keys(chats)
+}
+
+const removeChatFromLS = (chatName) => {
+    const allCurrentChats = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}')
+    delete allCurrentChats[chatName]
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(allCurrentChats))
 }

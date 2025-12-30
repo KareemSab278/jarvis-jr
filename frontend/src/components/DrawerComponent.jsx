@@ -13,6 +13,7 @@ import { loadChatFromLS, getAllChatsFromLS, saveChatToLS } from "../storage/LS";
 import { setCurrentChatName } from "../storage/currentChatSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { loadChat } from "../storage/chatSlice";
+import { MenuComponent } from "./MenuComponent";
 export { DrawerComponent };
 
 const DrawerComponent = () => {
@@ -79,21 +80,29 @@ const DrawerComponent = () => {
     })),
   ];
 
-  const DrawerList = (
-    <Box sx={drawerStyle} onClick={toggleDrawer(false)}>
-      <List>
-        {options.map((option) => (
-          <ListItem key={option.text} disablePadding>
-            <ListItemButton onClick={option.action}>
-              <ListItemText primary={option.text} />
+const DrawerList = (
+  <Box sx={drawerStyle}>
+    <List>
+      {options.map((i, option) => (
+        <ListItem key={`${i}-${option.text}`} disablePadding>
+          {i.text === "New Chat" || i.text === "Save Current Chat" ? (
+            <ListItemButton onClick={i.action}>
+              <ListItemText primary={i.text} />
             </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-      <Divider />
-    </Box>
-  );
-
+          ) : (
+            <>
+              <ListItemButton onClick={() => { i.action(); toggleDrawer(false)(); }}>
+                <ListItemText primary={i.text} />
+              </ListItemButton>
+              <MenuComponent chatName={i.text} onDelete={refreshChats} />
+            </>
+          )}
+        </ListItem>
+      ))}
+    </List>
+    <Divider />
+  </Box>
+);
   return (
     <div style={drawerStyle}>
       <Button onClick={toggleDrawer(true)} variant="filled">
