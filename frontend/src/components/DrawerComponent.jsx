@@ -21,23 +21,25 @@ const DrawerComponent = () => {
   const [allChats, setAllChats] = useState(getAllChatsFromLS());
   const dispatch = useDispatch();
   const chat = useSelector((state) => state.chat);
-  const currentChatName = useState(useSelector((state) => state.currentChatName));
 
   const refreshChats = useCallback(() => {
-    setOpen(false);
     setAllChats(getAllChatsFromLS());
-  }, [open]);
+  }, []);
+
+  useEffect(() => {
+    if (open) refreshChats();
+  }, [open, refreshChats]);
 
   const handleNewChat = () => {
-  const chatName = prompt("Enter a name for your new chat:");
-  if (chatName) {
-    dispatch(loadChat([]));
-    dispatch(setCurrentChatName(chatName));
-    saveChatToLS(chatName, []);
-    refreshChats();
-  }
-  setOpen(false);
-};
+    const chatName = prompt("Enter a name for your new chat:");
+    if (chatName) {
+      dispatch(loadChat([]));
+      dispatch(setCurrentChatName(chatName));
+      saveChatToLS(chatName, []);
+      refreshChats();
+    }
+    setOpen(false);
+  };
 
   const handleSelectChat = (chatName) => {
     const chat = loadChatFromLS(chatName);
@@ -66,8 +68,9 @@ const DrawerComponent = () => {
     <Box sx={drawerStyle}>
       <List>
         {options.map((option, idx) => (
-  <ListItem key={`${option.text}-${idx}`} disablePadding>
-            {option.text === "New Chat" || option.text === "Save Current Chat" ? (
+          <ListItem key={`${option.text}-${idx}`} disablePadding>
+            {option.text === "New Chat" ||
+            option.text === "Save Current Chat" ? (
               <ListItemButton onClick={option.action}>
                 <ListItemText primary={option.text} />
               </ListItemButton>
@@ -81,7 +84,11 @@ const DrawerComponent = () => {
                 >
                   <ListItemText primary={option.text} />
                 </ListItemButton>
-                <MenuComponent chatName={option.text} onAction={refreshChats} currChat={chat} />
+                <MenuComponent
+                  chatName={option.text}
+                  onAction={refreshChats}
+                  currChat={chat}
+                />
               </>
             )}
           </ListItem>
