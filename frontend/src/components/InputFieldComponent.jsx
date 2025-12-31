@@ -17,7 +17,7 @@ const InputField = () => {
   const dispatch = useDispatch();
 
   const handleSubmit = (input) => {
-    console.log(`Submitted: ${input}`);
+    if (input.trim().length === 0) return; // dont even think of sending an empty mssg to Jarvis Jr
     dispatch(
       pushMessage({
         isJarvisJr: false,
@@ -49,7 +49,10 @@ const InputField = () => {
         sx={inputFieldStyle}
       />
       <ButtonComponent
-        style={submitButtonStyle}
+        style={{
+          ...submitButtonStyle,
+          backgroundColor: inputValue.trim() === "" ? "#44475aff" : "#6c63ffff",
+        }}
         isDisabled={inputValue.trim() === ""}
         label={<KeyboardArrowUpRoundedIcon />}
         onClick={() => {

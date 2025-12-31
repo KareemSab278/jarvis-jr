@@ -10,7 +10,7 @@ import { store } from "./storage/store";
 createRoot(document.getElementById("root")).render(
   <Provider store={store}>
     <MantineProvider>
-      <DrawerComponent options={[]} />
+      <DrawerComponent />
       <style>{Theme}</style>
       <StrictMode>
         <App />

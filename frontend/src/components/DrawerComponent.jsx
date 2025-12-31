@@ -20,6 +20,7 @@ const DrawerComponent = () => {
   const [open, setOpen] = useState(false);
   const [allChats, setAllChats] = useState(getAllChatsFromLS());
   const dispatch = useDispatch();
+  const currentChatName = useSelector((state) => state.currentChatName);
   const chat = useSelector((state) => state.chat);
 
   const refreshChats = useCallback(() => {
@@ -98,13 +99,25 @@ const DrawerComponent = () => {
     </Box>
   );
   return (
-    <div style={drawerStyle}>
-      <Button onClick={toggleDrawer(true)} variant="filled">
-        <MenuRoundedIcon sx={burgerSize.xl} />
-      </Button>
+    <>
+      <div
+        style={{
+          ...drawerTheme.paper.sx,
+          position: "fixed",
+          top: 10,
+          left: 10,
+        }}
+      >
+        <h2 style={{ marginBottom: -10, marginLeft: 10, width: "100%" }}>
+          {currentChatName || "Chat not saved"}
+        </h2>
+        <Button onClick={toggleDrawer(true)} variant="filled">
+          <MenuRoundedIcon sx={burgerSize.xl} />
+        </Button>
+      </div>
       <Drawer open={open} onClose={toggleDrawer(false)} slotProps={drawerTheme}>
         {DrawerList}
       </Drawer>
-    </div>
+    </>
   );
 };

@@ -9,6 +9,8 @@ export {
   burgerSize,
   drawerStyle,
 };
+
+// here lies css hell. (evil bwahahahahaha)
 const COLOR = "#dfdfdfff";
 const BACKGROUND = "#2b2d42ff";
 const CHAT_BUBBLE_BACKGROUND_USER = "#242536ff";
@@ -23,6 +25,7 @@ const Theme = `
     margin: 0;
     font-family: ${FONT_FAMILY};
     text-align: center;
+    margin-top: 20px;
     }
 
 `;
@@ -65,16 +68,16 @@ const inputFieldStyle = {
 };
 
 const drawerStyle = {
-    width: 200,
-    backgroundColor: drawerTheme.paper.sx.backgroundColor,
-    color: drawerTheme.paper.sx.color,
-    fontFamily: FONT_FAMILY,
-  };
-  const burgerSize = {
-    md: { fontSize: 32, color: drawerTheme.paper.sx.color },
-    lg: { fontSize: 40, color: drawerTheme.paper.sx.color },
-    xl: { fontSize: 48, color: drawerTheme.paper.sx.color },
-  };
+  width: 200,
+  backgroundColor: drawerTheme.paper.sx.backgroundColor,
+  color: drawerTheme.paper.sx.color,
+  fontFamily: FONT_FAMILY,
+};
+const burgerSize = {
+  md: { fontSize: 32, color: drawerTheme.paper.sx.color },
+  lg: { fontSize: 40, color: drawerTheme.paper.sx.color },
+  xl: { fontSize: 48, color: drawerTheme.paper.sx.color },
+};
 
 const inputFieldContainerStyle = {
   width: "100%",
@@ -97,7 +100,7 @@ const submitButtonStyle = {
   borderRadius: "25%",
   ml: 1,
   alignSelf: "flex-end",
-  marginRight: "1%",  
+  marginRight: "1%",
 };
 
 const boxStyle = (isJarvisJr) => {
