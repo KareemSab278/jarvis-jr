@@ -69,7 +69,7 @@ const DrawerComponent = () => {
       <List>
         {options.map((option, idx) => (
           <ListItem key={`${option.text}-${idx}`} disablePadding>
-            {option.text === "New Chat" ||
+            {option.text === "Start New Chat" ||
             option.text === "Save Current Chat" ? (
               <ListItemButton onClick={option.action}>
                 <ListItemText primary={option.text} />
