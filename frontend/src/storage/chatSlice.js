@@ -1,24 +1,31 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice } from "@reduxjs/toolkit";
 
 const chatSlice = createSlice({
-  name: 'chat',
+  name: "chat",
   initialState: [],
   reducers: {
     pushMessage(state, action) {
-      state.push(action.payload)
+      state.push(action.payload);
     },
     clearChat() {
-      return []
+      return [];
     },
     loadChat(state, action) {
-      return action.payload
-    }
-  }
-})
+      return action.payload;
+    },
+    updateMessage(state, action) {
+      const { ts, text } = action.payload;
+      const idx = state.findIndex((m) => m.ts === ts);
+      if (idx !== -1) {
+        state[idx] = { ...state[idx], text };
+      }
+    },
+  },
+});
 
-
-export const { pushMessage, clearChat, loadChat } = chatSlice.actions
-export default chatSlice.reducer
+export const { pushMessage, clearChat, loadChat, updateMessage } =
+  chatSlice.actions;
+export default chatSlice.reducer;
 // my dumbahh gon forger this
 // send a messae:
 // dispatch(pushMessage({

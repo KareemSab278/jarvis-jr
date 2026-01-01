@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import { pushMessage } from "../storage/chatSlice";
+import { pushMessage, updateMessage } from "../storage/chatSlice";
 
 const API_URL = "http://localhost:8000/api/chat";
 const CODING_MODEL = "qwen2.5-coder:3b";
@@ -9,6 +9,14 @@ export const useSendPrompt = () => {
 
   const sendPrompt = async (prompt) => {
     try {
+      const loadingTs = Date.now();
+      dispatch(
+        pushMessage({
+          isJarvisJr: true,
+          text: "",
+          ts: loadingTs,
+        })
+      );
       const response = await fetch(API_URL, {
         method: "POST",
         headers: {
@@ -23,15 +31,23 @@ export const useSendPrompt = () => {
       const data = await response.json();
       if (!data?.content || data.content.length === 0)
         throw new Error("API response content is empty");
+      // update the previous loading message with the real content
       dispatch(
-        pushMessage({
-          isJarvisJr: true,
+        updateMessage({
+          ts: loadingTs,
           text: data?.content,
-          ts: Date.now(),
         })
       );
       console.log("API response data:", data);
     } catch (error) {
+      if (typeof loadingTs !== "undefined") {
+        dispatch(
+          updateMessage({
+            ts: loadingTs,
+            text: `Error: ${error.message}`,
+          })
+        );
+      }
       console.error("Error making API request:", error);
       throw error;
     }

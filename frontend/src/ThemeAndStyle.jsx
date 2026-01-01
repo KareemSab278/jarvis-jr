@@ -8,6 +8,8 @@ export {
   boxStyle,
   burgerSize,
   drawerStyle,
+  chatTitleStyle,
+  appBodyStyle,
 };
 
 // here lies css hell. (evil bwahahahahaha)
@@ -29,6 +31,27 @@ const Theme = `
     }
 
 `;
+
+const appBodyStyle = {
+  width: "90%",
+  margin: "0 auto",
+  marginBottom: "90px",
+  marginTop: "20px",
+  paddingTop: "60px",
+};
+
+const chatTitleStyle = {
+  textAlign: "center",
+  marginBottom: "20px",
+  position: "fixed",
+  top: "0",
+  left: "0",
+  right: "0",
+  width: "0 auto",
+  left: "50%",
+  transform: "translateX(-50%)",
+  textShadow: "0 8px 16px rgba(0, 0, 0, 0.5)",
+};
 
 const drawerTheme = {
   paper: {

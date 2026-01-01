@@ -106,11 +106,10 @@ const DrawerComponent = () => {
           position: "fixed",
           top: 10,
           left: 10,
+          width: 50,
+          marginLeft: -10, // idk why i had to add this...
         }}
       >
-        <h2 style={{ marginBottom: -10, marginLeft: 10, width: "100%" }}>
-          {currentChatName || "Chat not saved"}
-        </h2>
         <Button onClick={toggleDrawer(true)} variant="filled">
           <MenuRoundedIcon sx={burgerSize.xl} />
         </Button>
